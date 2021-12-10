@@ -47,7 +47,35 @@ def avoid_walls(my_head: Dict[str, int], possible_moves: List[str], height:int, 
     possible_moves.remove("down")
 
   return possible_moves
-  
+
+
+def avoid_yourself(my_head: Dict[str, int], possible_moves: List[str], body: List [dict]):
+  head_x:int=my_head["x"]
+  head_y:int=my_head["y"]
+  for dictionary in body:
+    body_x:int=dictionary["x"]
+    body_y:int=dictionary["y"]
+    print("my body: ", body)
+    try:
+      if head_x==body_x and head_y==body_y+1:
+        possible_moves.remove("down")
+      elif head_x==body_x and head_y==body_y-1:
+        possible_moves.remove("up")
+      elif head_y==body_y and head_x==body_x+1:
+        possible_moves.remove("left")
+      elif head_y==body_y and head_x==body_x-1:
+        possible_moves.remove("right")
+      else:
+        print("test print else1")
+    except:
+       continue      
+      
+  return possible_moves
+
+def avoid_snakes(my_head: Dict[str, int], possible_moves: List[str], snakes: List [dict]):
+  for snake in snakes:
+    print(snake)
+  return possible_moves
 
 def choose_move(data: dict) -> str:
     """
@@ -65,6 +93,8 @@ def choose_move(data: dict) -> str:
     my_body = data["you"]["body"]  # A list of x/y coordinate dictionaries like [ {"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0} ]
     board_height=data["board"]["height"]
     board_width=data["board"]["width"]
+
+    snakes=data["snakes"]
 
     # TODO: uncomment the lines below so you can see what this data looks like in your output!
     # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
@@ -85,6 +115,8 @@ def choose_move(data: dict) -> str:
     possible_moves = avoid_walls(my_head,possible_moves,board_height, board_width)
 
     # TODO Using information from 'data', don't let your Battlesnake pick a move that would hit its own body
+
+    possible_moves = avoid_yourself(my_head,possible_moves,my_body)
 
     # TODO: Using information from 'data', don't let your Battlesnake pick a move that would collide with another Battlesnake
 
